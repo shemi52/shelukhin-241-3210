@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Калькулятор</title>
+    <style>
+        :root{
+            --white: #fff;
+            --black: #2a2a2a;
+        }
+        body {
+            background: var(--black);
+            display: grid;
+            place-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.2);
+        }
+        #display {
+            width: 100%;
+            margin-bottom: 1rem;
+            padding: 0.8rem;
+            font-size: 1.4rem;
+            border: 2px solid #e74c3c;
+            border-radius: 6px;
+            text-align: right;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.5rem;
+        }
+        .btn {
+            padding: 1rem;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 10px;
+            transition: 0.2s;
+        }
+        .num { background: skyblue; color: var(--white); }
+        .op { background: burlywood; color: var(--white); }
+        .clear { background: red; grid-column: span 2; }
+        .equals { background: greenyellow; grid-column: span 2; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <input type="text" id="display" readonly>
+        <div class="grid">
+            <button class="btn num" onclick="addChar('7')">7</button>
+            <button class="btn num" onclick="addChar('8')">8</button>
+            <button class="btn num" onclick="addChar('9')">9</button>
+            <button class="btn op" onclick="addChar('/')">/</button>
+            <button class="btn num" onclick="addChar('4')">4</button>
+            <button class="btn num" onclick="addChar('5')">5</button>
+            <button class="btn num" onclick="addChar('6')">6</button>
+            <button class="btn op" onclick="addChar('*')">×</button>
+            <button class="btn num" onclick="addChar('1')">1</button>
+            <button class="btn num" onclick="addChar('2')">2</button>
+            <button class="btn num" onclick="addChar('3')">3</button>
+            <button class="btn op" onclick="addChar('-')">-</button>
+            <button class="btn num" onclick="addChar('0')">0</button>
+            <button class="btn op" onclick="addChar('(')">(</button>
+            <button class="btn op" onclick="addChar(')')">)</button>
+            <button class="btn op" onclick="addChar('+')">+</button>
+            <button class="btn clear" onclick="resetdisplay()">Сброс</button>
+            <button class="btn equals" onclick="compute()">=</button>
+        </div>
+    </div>
+
+    <script>
+        const display = document.getElementById('display');
+        
+        function addChar(c) {
+            display.value += c;
+        }
+        
+        function resetdisplay() {
+            display.value = '';
+        }
+        
+        function compute() {
+            const expr = encodeURIComponent(display.value);
+            fetch(`index.php?expression=${expr}`)
+                .then(r => r.text())
+                .then(data => {
+                    display.value = data;
+                })
+                .catch(e => console.error('Ошибка:', e));
+        }
+    </script>
+</body>
+</html>
